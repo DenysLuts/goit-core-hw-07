@@ -125,7 +125,7 @@ def input_error(func):
     return wrapper
 
 
-@input_error
+# @input_error
 def add_contact(args, book: AddressBook):
     if len(args) != 2:
         raise ValueError
@@ -137,7 +137,7 @@ def add_contact(args, book: AddressBook):
 
 
 
-@input_error
+# @input_error
 def change_contact(args, book: AddressBook):
     if len(args) != 2:
         raise IndexError
@@ -156,7 +156,7 @@ def change_contact(args, book: AddressBook):
         return "Contact not found."
 
 
-@input_error
+# @input_error
 def show_phone(args, book: AddressBook):
     if len(args) != 1:
         raise ValueError
@@ -168,7 +168,7 @@ def show_phone(args, book: AddressBook):
         return "Contact not found."
 
 
-@input_error
+# @input_error
 def show_all(book: AddressBook):
     if not book:
         return "No contacts found."
@@ -176,7 +176,7 @@ def show_all(book: AddressBook):
         return "\n".join([str(record) for record in book.values()])
 
 
-@input_error
+# @input_error
 def add_birthday(args, book):
     name, birthday = args
     record = book.find(name)
@@ -188,7 +188,7 @@ def add_birthday(args, book):
     return message
 
 
-@input_error
+# @input_error
 def show_birthday(args, book: AddressBook):
     if len(args) != 1:
         raise ValueError
@@ -200,7 +200,7 @@ def show_birthday(args, book: AddressBook):
         return "No birthday found for the contact."
 
 
-@input_error
+# @input_error
 def birthdays(book):
     today = datetime.now().date()
     upcoming_birthdays = book.get_upcoming_birthday(days=7)
@@ -228,7 +228,7 @@ def main():
     print("Welcome to the assistant bot!")
     while True:
         user_input = input("Enter a command: ")
-        command, *args = parse_input(user_input)
+        command, args = parse_input(user_input)
 
         if command in ["close", "exit"]:
             print("Good bye!")
