@@ -82,33 +82,16 @@ class AddressBook(UserDict):
     def delete(self, name):
         del self.data[name]
 
-    def find_next_birthday(self, weekday):
-        today = datetime.now().date()
-        next_birthday = None
-        for record in self.data.values():
-            if record.birthday:
-                birthday_this_year = record.birthday.date.replace(year=today.year)
-                if birthday_this_year < today:
-                    birthday_this_year = birthday_this_year.replace(year=today.year + 1)
-                if birthday_this_year.weekday() == weekday:
-                    if next_birthday is None or birthday_this_year < next_birthday:
-                        next_birthday = birthday_this_year
-        return next_birthday
+    def find_next_weekday(self, weekday):
+        days_ahead = weekday - self.weekday()
+        if days_ahead <= 0:
+            days_ahead += 7
+        return self + timedelta(days=days_ahead)
 
-    def get_upcoming_birthday(self, days=7):
+    def get_upcoming_birthdays(self, days=7):
+        today = datetime.today().date()
         upcoming_birthdays = []
-        today = datetime.now().date()
-        end_date = today + timedelta(days=days)
-
-        for record in self.data.values():
-            if record.birthday:
-                next_birthday_year = today.year if record.birthday.date.replace(
-                    year=today.year) >= today else today.year + 1
-                next_birthday = record.birthday.date.replace(year=next_birthday_year)
-                if today <= next_birthday <= end_date:
-                    upcoming_birthdays.append((record.name.value, next_birthday))
-
-        return upcoming_birthdays
+        return {}
 
 
 def input_error(func):
@@ -125,38 +108,37 @@ def input_error(func):
     return wrapper
 
 
-# @input_error
+@input_error
 def add_contact(args, book: AddressBook):
-    if len(args) != 2:
-        raise ValueError
-    name, phone = args
-    record = Record(name)
-    record.add_phone(phone)
-    book.add_record(record)
-    return "Contact added."
+    name, phone, *_ = args
+    record = book.find(name)
+    message = "Contact updated."
+    if record is None:
+        record = Record(name)
+        book.add_record(record)
+        message = "Contact added."
+    if phone:
+        record.add_phone(phone)
+    return message
+
+
 
 
 
 # @input_error
+@input_error
 def change_contact(args, book: AddressBook):
     if len(args) != 2:
-        raise IndexError
-
+        raise ValueError("Invalid number of arguments. Usage: change [ім'я] [новий телефон]")
     name, new_phone = args
     record = book.find(name)
-
     if record:
-        old_phone = record.find_phone(new_phone)  # Знаходимо старий номер телефону для заміни
-        if old_phone:
-            record.edit_phone(old_phone.value, new_phone)
-            return "Contact updated successfully"
-        else:
-            return "Contact not found."
+        record.add_phone(new_phone)
+        return "Phone number updated."
     else:
         return "Contact not found."
 
-
-# @input_error
+@input_error
 def show_phone(args, book: AddressBook):
     if len(args) != 1:
         raise ValueError
@@ -168,7 +150,7 @@ def show_phone(args, book: AddressBook):
         return "Contact not found."
 
 
-# @input_error
+@input_error
 def show_all(book: AddressBook):
     if not book:
         return "No contacts found."
@@ -176,7 +158,7 @@ def show_all(book: AddressBook):
         return "\n".join([str(record) for record in book.values()])
 
 
-# @input_error
+#@input_error
 def add_birthday(args, book):
     name, birthday = args
     record = book.find(name)
@@ -188,7 +170,7 @@ def add_birthday(args, book):
     return message
 
 
-# @input_error
+@input_error
 def show_birthday(args, book: AddressBook):
     if len(args) != 1:
         raise ValueError
@@ -200,21 +182,22 @@ def show_birthday(args, book: AddressBook):
         return "No birthday found for the contact."
 
 
-# @input_error
+@input_error
 def birthdays(book):
     today = datetime.now().date()
-    upcoming_birthdays = book.get_upcoming_birthday(days=7)
+    upcoming_birthdays = book.get_upcoming_birthdays(days=7)
     birthdays_this_week = []
 
-    for name, next_birthday in upcoming_birthdays:
+    for name, next_birthday in upcoming_birthdays.items():
         days_until_birthday = (next_birthday - today).days
-        if days_until_birthday <= 7:
+        if 0 < days_until_birthday <= 7:
             birthdays_this_week.append((name, days_until_birthday))
 
     if birthdays_this_week:
         return "\n".join([f"{name}: {days} days left until birthday" for name, days in birthdays_this_week])
     else:
         return "No birthdays coming up in the next week."
+
 
 
 def parse_input(user_input):
