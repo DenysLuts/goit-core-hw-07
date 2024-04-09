@@ -90,8 +90,18 @@ class AddressBook(UserDict):
 
     def get_upcoming_birthdays(self, days=7):
         today = datetime.today().date()
-        upcoming_birthdays = []
-        return {}
+        upcoming_birthdays = {}
+
+        for name, record in self.data.items():
+            if record.birthday:
+                next_birthday = record.birthday.date.replace(year=today.year)
+                if next_birthday < today:
+                    next_birthday = next_birthday.replace(year=today.year + 1)
+                days_until_birthday = (next_birthday - today).days
+                if 0 < days_until_birthday <= days:
+                    upcoming_birthdays[name] = next_birthday
+
+        return upcoming_birthdays
 
 
 def input_error(func):
@@ -122,19 +132,17 @@ def add_contact(args, book: AddressBook):
     return message
 
 
-
-
-
-# @input_error
-@input_error
 def change_contact(args, book: AddressBook):
-    if len(args) != 2:
-        raise ValueError("Invalid number of arguments. Usage: change [ім'я] [новий телефон]")
-    name, new_phone = args
+    if len(args) != 3:
+        raise ValueError("Invalid number of arguments. Format: change <name> <old_phone> <new_phone>")
+    name, old_phone, new_phone = args
     record = book.find(name)
     if record:
-        record.add_phone(new_phone)
-        return "Phone number updated."
+        if record.find_phone(old_phone):
+            record.edit_phone(old_phone, new_phone)
+            return "Phone number updated."
+        else:
+            return "Old phone number not found for the contact."
     else:
         return "Contact not found."
 
@@ -199,9 +207,8 @@ def birthdays(book):
         return "No birthdays coming up in the next week."
 
 
-
 def parse_input(user_input):
-    parts = user_input.split(maxsplit=2)  # Додано maxsplit=2 для розділення на 3 частини максимум
+    parts = user_input.split(maxsplit=3)
     command = parts[0].lower()
     args = parts[1:]
     return command, args
