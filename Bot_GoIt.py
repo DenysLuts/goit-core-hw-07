@@ -1,3 +1,4 @@
+import pickle
 from collections import UserDict
 from datetime import datetime, timedelta
 
@@ -98,8 +99,9 @@ class AddressBook(UserDict):
                 if next_birthday < today:
                     next_birthday = next_birthday.replace(year=today.year + 1)
                 days_until_birthday = (next_birthday - today).days
+                weekday = next_birthday.strftime('%A')  # День тижня
                 if 0 < days_until_birthday <= days:
-                    upcoming_birthdays[name] = next_birthday
+                    upcoming_birthdays[name] = (days_until_birthday, weekday)
 
         return upcoming_birthdays
 
@@ -190,21 +192,20 @@ def show_birthday(args, book: AddressBook):
         return "No birthday found for the contact."
 
 
-@input_error
 def birthdays(book):
     today = datetime.now().date()
     upcoming_birthdays = book.get_upcoming_birthdays(days=7)
     birthdays_this_week = []
 
-    for name, next_birthday in upcoming_birthdays.items():
-        days_until_birthday = (next_birthday - today).days
+    for name, (days_until_birthday, day_of_week) in upcoming_birthdays.items():
         if 0 < days_until_birthday <= 7:
-            birthdays_this_week.append((name, days_until_birthday))
+            birthdays_this_week.append((name, days_until_birthday, day_of_week))
 
     if birthdays_this_week:
-        return "\n".join([f"{name}: {days} days left until birthday" for name, days in birthdays_this_week])
+        return "\n".join([f"{name}: {days} days left until birthday, falls on {day_of_week}" for name, days, day_of_week in birthdays_this_week])
     else:
         return "No birthdays coming up in the next week."
+
 
 
 def parse_input(user_input):
