@@ -1,4 +1,3 @@
-
 from collections import UserDict
 from datetime import datetime, timedelta
 
@@ -83,36 +82,38 @@ class AddressBook(UserDict):
             days_ahead += 7
         return self + timedelta(days=days_ahead)
 
-    def get_upcoming_birthdays(users, book):
+    def get_upcoming_birthdays(self, book):
         today = datetime.today().date()
-        upcoming_birthdays = []
 
-        for user in users:
+        messages = []
+
+        for user in book.values():
             try:
-                birthday = datetime.strptime(user['birthday'], '%Y.%m.%d').date()
-                birthday_this_year = birthday.replace(year=today.year)
+                if user.birthday:
+                    birthday = user.birthday.date
+                    birthday_this_year = birthday.replace(year=today.year)
 
-                if birthday_this_year < today:
-                    birthday_this_year = birthday_this_year.replace(year=today.year + 1)
+                    if birthday_this_year < today:
+                        birthday_this_year = birthday_this_year.replace(year=today.year + 1)
 
-                days_until_birthday = (birthday_this_year - today).days
+                    days_until_birthday = (birthday_this_year - today).days
 
-                if 0 <= days_until_birthday <= 7:
-                    congratulation_date = birthday_this_year
-                    if congratulation_date.weekday() >= 5:
-                        congratulation_date = book.find_next_weekday(congratulation_date)
+                    if 0 <= days_until_birthday <= 7:
+                        congratulation_date = birthday_this_year
+                        if congratulation_date.weekday() >= 5:
+                            congratulation_date = self.find_next_weekday(congratulation_date, 0)
 
-                    congratulation_date_str = congratulation_date.strftime('%Y.%m.%d')
+                        congratulation_date_str = congratulation_date.strftime('%Y.%m.%d')
+                        day_of_week = congratulation_date.strftime('%A') 
 
-                    upcoming_birthdays.append({
-                        "name": user["name"],
-                        "congratulation_date": congratulation_date_str
-                    })
+                        messages.append(
+                            f"{user.name.value}: {days_until_birthday} days until birthday, falls on {day_of_week}")
 
             except ValueError:
-                print(f'Некоректна дата народження для користувача {user["name"]}')
+                messages.append(f'Incorrect birthday date for user {user.name.value}')
 
-        return upcoming_birthdays
+        return "\n".join(messages)
+
 
 def input_error(func):
     def wrapper(*args, **kwargs):
@@ -194,21 +195,10 @@ def show_birthday(args, book: AddressBook):
     else:
         return "No birthday found for the contact."
 
+
 def birthdays(book):
-    today = datetime.today().date()
-    upcoming_birthdays = []
-    for record in book.values():
-        if record.birthday:
-            birthday_this_year = record.birthday.date.replace(year=today.year)
-            if birthday_this_year < today:
-                birthday_this_year = birthday_this_year.replace(year=today.year + 1)
+    return book.get_upcoming_birthdays(book)
 
-            days_until_birthday = (birthday_this_year - today).days
-            if 0 <= days_until_birthday <= 7:
-                day_of_week = birthday_this_year.strftime('%A')
-                return f"{record.name.value}: {days_until_birthday} days left until birthday, falls on {day_of_week}"
-
-    return "No upcoming birthdays"
 
 def parse_input(user_input):
     parts = user_input.split(maxsplit=3)

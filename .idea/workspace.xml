@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8ae45311-6861-4cec-8bbd-9873697f7f01" name="Changes" comment="я знаю що тут э помилка але я якщо чесно уже 3 години не можу її виправити, а саме з add [ім'я] [телефон] навіть chat gpt не допомагає">
+    <list default="true" id="8ae45311-6861-4cec-8bbd-9873697f7f01" name="Changes" comment="bot доробітка фінальна">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Bot_GoIt.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bot_GoIt.py" afterDir="false" />
     </list>
@@ -69,7 +69,16 @@
       <workItem from="1712592547868" duration="7297000" />
       <workItem from="1712600031853" duration="3000" />
       <workItem from="1712600130391" duration="1600000" />
-      <workItem from="1712601977787" duration="5797000" />
+      <workItem from="1712601977787" duration="6214000" />
+      <workItem from="1712608320857" duration="305000" />
+      <workItem from="1712652006617" duration="3953000" />
+      <workItem from="1712686847955" duration="1086000" />
+      <workItem from="1712688331691" duration="1109000" />
+      <workItem from="1712689467187" duration="1459000" />
+      <workItem from="1712691040809" duration="5000" />
+      <workItem from="1712771793272" duration="721000" />
+      <workItem from="1712857996505" duration="8022000" />
+      <workItem from="1713084471949" duration="2200000" />
     </task>
     <task id="LOCAL-00001" summary="я знаю що тут э помилка але я якщо чесно уже 3 години не можу її виправити, а саме з add [ім'я] [телефон] навіть chat gpt не допомагає">
       <option name="closed" value="true" />
@@ -79,7 +88,47 @@
       <option name="project" value="LOCAL" />
       <updated>1712601458908</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="bot">
+      <option name="closed" value="true" />
+      <created>1712607855683</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1712607855683</updated>
+    </task>
+    <task id="LOCAL-00003" summary="bot доробітка">
+      <option name="closed" value="true" />
+      <created>1712655468785</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1712655468785</updated>
+    </task>
+    <task id="LOCAL-00004" summary="bot доробітка фінальна">
+      <option name="closed" value="true" />
+      <created>1712690834954</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1712690834954</updated>
+    </task>
+    <task id="LOCAL-00005" summary="bot доробітка фінальна">
+      <option name="closed" value="true" />
+      <created>1712771915436</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1712771915436</updated>
+    </task>
+    <task id="LOCAL-00006" summary="bot доробітка фінальна">
+      <option name="closed" value="true" />
+      <created>1712865994881</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1712865994881</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -87,10 +136,13 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="я знаю що тут э помилка але я якщо чесно уже 3 години не можу її виправити, а саме з add [ім'я] [телефон] навіть chat gpt не допомагає" />
-    <option name="LAST_COMMIT_MESSAGE" value="я знаю що тут э помилка але я якщо чесно уже 3 години не можу її виправити, а саме з add [ім'я] [телефон] навіть chat gpt не допомагає" />
+    <MESSAGE value="bot" />
+    <MESSAGE value="bot доробітка" />
+    <MESSAGE value="bot доробітка фінальна" />
+    <option name="LAST_COMMIT_MESSAGE" value="bot доробітка фінальна" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/goit_core_hw_07_git$Bot_GoIt.coverage" NAME="Bot_GoIt Coverage Results" MODIFIED="1712603267876" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/goit_core_hw_07_git$123123.coverage" NAME="123123 Coverage Results" MODIFIED="1712607692281" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/goit_core_hw_07_git$Bot_GoIt.coverage" NAME="Bot_GoIt Coverage Results" MODIFIED="1713085133661" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/goit_core_hw_07_git$123123.coverage" NAME="123123 Coverage Results" MODIFIED="1713086461501" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
