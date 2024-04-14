@@ -82,12 +82,12 @@ class AddressBook(UserDict):
             days_ahead += 7
         return self + timedelta(days=days_ahead)
 
-    def get_upcoming_birthdays(self, book):
+    def get_upcoming_birthdays(self):
         today = datetime.today().date()
 
         messages = []
 
-        for user in book.values():
+        for user in self.values():
             try:
                 if user.birthday:
                     birthday = user.birthday.date
@@ -101,10 +101,10 @@ class AddressBook(UserDict):
                     if 0 <= days_until_birthday <= 7:
                         congratulation_date = birthday_this_year
                         if congratulation_date.weekday() >= 5:
-                            congratulation_date = self.find_next_weekday(congratulation_date, 0)
+                            congratulation_date = self.find_next_weekday(congratulation_date)
 
                         congratulation_date_str = congratulation_date.strftime('%Y.%m.%d')
-                        day_of_week = congratulation_date.strftime('%A') 
+                        day_of_week = congratulation_date.strftime('%A')
 
                         messages.append(
                             f"{user.name.value}: {days_until_birthday} days until birthday, falls on {day_of_week}")
@@ -197,7 +197,7 @@ def show_birthday(args, book: AddressBook):
 
 
 def birthdays(book):
-    return book.get_upcoming_birthdays(book)
+    return book.get_upcoming_birthdays()
 
 
 def parse_input(user_input):
