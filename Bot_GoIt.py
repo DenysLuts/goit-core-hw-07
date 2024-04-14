@@ -77,15 +77,17 @@ class AddressBook(UserDict):
         del self.data[name]
 
     def find_next_weekday(self, weekday):
-        days_ahead = weekday - self.weekday()
+        today = datetime.today().date()
+        days_ahead = weekday.weekday() - today.weekday()
         if days_ahead <= 0:
             days_ahead += 7
-        return self + timedelta(days=days_ahead)
+        return today + timedelta(days=days_ahead)
 
     def get_upcoming_birthdays(self):
         today = datetime.today().date()
 
         messages = []
+        today_birthdays = []
 
         for user in self.values():
             try:
@@ -98,7 +100,9 @@ class AddressBook(UserDict):
 
                     days_until_birthday = (birthday_this_year - today).days
 
-                    if 0 <= days_until_birthday <= 7:
+                    if days_until_birthday == 0:
+                        today_birthdays.append(user.name.value)
+                    elif 0 <= days_until_birthday <= 7:
                         congratulation_date = birthday_this_year
                         if congratulation_date.weekday() >= 5:
                             congratulation_date = self.find_next_weekday(congratulation_date)
@@ -112,8 +116,10 @@ class AddressBook(UserDict):
             except ValueError:
                 messages.append(f'Incorrect birthday date for user {user.name.value}')
 
-        return "\n".join(messages)
+        if today_birthdays:
+            messages.append(f"Today is the birthday of: {', '.join(today_birthdays)}")
 
+        return "\n".join(messages)
 
 def input_error(func):
     def wrapper(*args, **kwargs):
