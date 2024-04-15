@@ -76,50 +76,42 @@ class AddressBook(UserDict):
     def delete(self, name):
         del self.data[name]
 
-    def find_next_weekday(self, weekday):
-        today = datetime.today().date()
-        days_ahead = weekday.weekday() - today.weekday()
+    def find_next_weekday(d, weekday):
+        days_ahead = weekday - d.weekday()
         if days_ahead <= 0:
             days_ahead += 7
-        return today + timedelta(days=days_ahead)
+        return d + timedelta(days=days_ahead)
 
-    def get_upcoming_birthdays(self):
+    def get_upcoming_birthdays(users):
         today = datetime.today().date()
+        upcoming_birthdays = []
 
-        messages = []
-        today_birthdays = []
-
-        for user in self.values():
+        for user in users:
             try:
-                if user.birthday:
-                    birthday = user.birthday.date
-                    birthday_this_year = birthday.replace(year=today.year)
+                birthday = datetime.strptime(user['birthday'], '%Y.%m.%d').date()
+                birthday_this_year = birthday.replace(year=today.year)
 
-                    if birthday_this_year < today:
-                        birthday_this_year = birthday_this_year.replace(year=today.year + 1)
+                if birthday_this_year < today:
+                    birthday_this_year = birthday_this_year.replace(year=today.year + 1)
 
-                    days_until_birthday = (birthday_this_year - today).days
+                days_until_birthday = (birthday_this_year - today).days
 
-                    if days_until_birthday == 0:
-                        today_birthdays.append(user.name.value)
-                    elif 0 <= days_until_birthday <= 7:
-                        congratulation_date = birthday_this_year
-                        if congratulation_date.weekday() >= 5:
-                            congratulation_date = self.find_next_weekday(congratulation_date)
+                if 0 <= days_until_birthday <= 7:
+                    congratulation_date = birthday_this_year
+                    if congratulation_date.weekday() >= 5:
+                        congratulation_date = find_next_weekday(congratulation_date)
 
-                        congratulation_date_str = congratulation_date.strftime('%Y.%m.%d')
-                        day_of_week = congratulation_date.strftime('%A')
+                    congratulation_date_str = congratulation_date.strftime('%Y.%m.%d')
 
-                        messages.append(
-                            f"{user.name.value}: {days_until_birthday} days until birthday, falls on {day_of_week}")
+                    upcoming_birthdays.append({
+                        "name": user["name"],
+                        "congratulation_date": congratulation_date_str
+                    })
 
             except ValueError:
-                messages.append(f'Incorrect birthday date for user {user.name.value}')
+                print(f'Некоректна дата народження для користувача {user["name"]}')
 
-        if today_birthdays:
-            messages.append(f"Today is the birthday of: {', '.join(today_birthdays)}")
-
-        return "\n".join(messages)
+        return upcoming_birthdays
 
 def input_error(func):
     def wrapper(*args, **kwargs):
