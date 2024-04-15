@@ -67,51 +67,57 @@ class Record:
         return f"Contact name: {self.name.value}, phones: {'; '.join(str(p) for p in self.phones)}"
 
 class AddressBook(UserDict):
-    def add_record(self, record):
-        self.data[record.name.value] = record
+    def add_record(self, record: Record):
+        self.data[record.name.value] = record  # Додавання запису в адресну книгу.
 
     def find(self, name):
-        return self.data.get(name)
+        return self.data.get(name)  # Пошук запису за ім'ям.
 
     def delete(self, name):
-        del self.data[name]
+        if name in self.data:
+            del self.data[name]  # Видалення запису з адресної книги.
 
+    @staticmethod
     def find_next_weekday(d, weekday):
-        days_ahead = weekday - d.weekday()
-        if days_ahead <= 0:
+        """
+        Функція для знаходження наступного заданого дня тижня після заданої дати.
+        d: datetime.date - початкова дата.
+        weekday: int - день тижня від 0 (понеділок) до 6 (неділя).
+        """
+        days_ahead = weekday - d.weekday()  # Різниця між поточним днем тижня та бажаним днем тижня.
+        if days_ahead <= 0:  # Якщо день народження вже минув у цьому тижні.
             days_ahead += 7
-        return d + timedelta(days=days_ahead)
+        return d + timedelta(days_ahead)  # Повернення дати наступного заданого дня тижня.
 
-    def get_upcoming_birthdays(users):
-        today = datetime.today().date()
+    def get_upcoming_birthdays(self, days=7) -> str:
+        today = datetime.today().date()  # Поточна дата.
         upcoming_birthdays = []
 
-        for user in users:
-            try:
-                birthday = datetime.strptime(user['birthday'], '%Y.%m.%d').date()
-                birthday_this_year = birthday.replace(year=today.year)
+        for user in self.data.values():
+            if user.birthday is None:
+                continue
+            birthday_this_year = user.birthday.date.replace(year=today.year)  # Дата народження в поточному році.
 
-                if birthday_this_year < today:
-                    birthday_this_year = birthday_this_year.replace(year=today.year + 1)
+            if birthday_this_year < today:
+                birthday_this_year = birthday_this_year.replace(
+                    year=today.year + 1)  # Дата народження в наступному році.
 
-                days_until_birthday = (birthday_this_year - today).days
+            if 0 <= (birthday_this_year - today).days <= days:
+                if birthday_this_year.weekday() >= 5:  # субота або неділя
+                    birthday_this_year = self.find_next_weekday(
+                        birthday_this_year, 0
+                    )  # Понеділок
 
-                if 0 <= days_until_birthday <= 7:
-                    congratulation_date = birthday_this_year
-                    if congratulation_date.weekday() >= 5:
-                        congratulation_date = find_next_weekday(congratulation_date)
+                congratulation_date_str = birthday_this_year.strftime("%Y.%m.%d")
+                weekday_str = birthday_this_year.strftime("%A")
+                upcoming_birthdays.append(
+                    f"{user.name.value}'s birthday is on {weekday_str}."
+                )
 
-                    congratulation_date_str = congratulation_date.strftime('%Y.%m.%d')
+        if not upcoming_birthdays:
+            return "There are no upcoming birthdays."
 
-                    upcoming_birthdays.append({
-                        "name": user["name"],
-                        "congratulation_date": congratulation_date_str
-                    })
-
-            except ValueError:
-                print(f'Некоректна дата народження для користувача {user["name"]}')
-
-        return upcoming_birthdays
+        return '\n'.join(upcoming_birthdays)
 
 def input_error(func):
     def wrapper(*args, **kwargs):
